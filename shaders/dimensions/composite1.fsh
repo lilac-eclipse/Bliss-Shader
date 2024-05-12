@@ -18,11 +18,11 @@ const bool colortex5MipmapEnabled = true;
 	const bool shadowHardwareFiltering = true;
 	uniform sampler2DShadow shadow;
 
-	#ifdef TRANSLUCENT_COLORED_SHADOWS
-		uniform sampler2D shadowcolor0;
-		uniform sampler2DShadow shadowtex0;
-		uniform sampler2DShadow shadowtex1;
-	#endif
+	// #ifdef TRANSLUCENT_COLORED_SHADOWS
+	// 	uniform sampler2D shadowcolor0;
+	// 	uniform sampler2DShadow shadowtex0;
+	// 	uniform sampler2DShadow shadowtex1;
+	// #endif
 
 	flat varying vec3 averageSkyCol_Clouds;
 	flat varying vec4 lightCol;
@@ -35,22 +35,22 @@ const bool colortex5MipmapEnabled = true;
 	#include "/lib/lightning_stuff.glsl"
 #endif
 
-#ifdef NETHER_SHADER
-	uniform float nightVision;
-	uniform sampler2D colortex4;
-	const bool colortex4MipmapEnabled = true;
-	uniform vec3 lightningEffect;
-	// #define LIGHTSOURCE_REFLECTION
-#endif
+// #ifdef NETHER_SHADER
+// 	uniform float nightVision;
+// 	uniform sampler2D colortex4;
+// 	const bool colortex4MipmapEnabled = true;
+// 	uniform vec3 lightningEffect;
+// 	// #define LIGHTSOURCE_REFLECTION
+// #endif
 
-#ifdef END_SHADER
-	uniform float nightVision;
-	uniform sampler2D colortex4;
-	uniform vec3 lightningEffect;
+// #ifdef END_SHADER
+// 	uniform float nightVision;
+// 	uniform sampler2D colortex4;
+// 	uniform vec3 lightningEffect;
 	
-	flat varying float Flashing;
-	// #define LIGHTSOURCE_REFLECTION
-#endif
+// 	flat varying float Flashing;
+// 	// #define LIGHTSOURCE_REFLECTION
+// #endif
 
 uniform int hideGUI;
 uniform sampler2D noisetex; //noise
@@ -72,12 +72,12 @@ uniform sampler2D colortex5; //TAA buffer/previous frame
 uniform sampler2D colortex6; //Noise
 uniform sampler2D colortex7; //water?
 uniform sampler2D colortex8; //Specular
-// uniform sampler2D colortex9; //Specular
+uniform sampler2D colortex9; //Specular
 uniform sampler2D colortex10;
 uniform sampler2D colortex11;
-uniform sampler2D colortex12;
-uniform sampler2D colortex13;
-uniform sampler2D colortex14;
+// uniform sampler2D colortex12;
+// uniform sampler2D colortex13;
+// uniform sampler2D colortex14;
 uniform sampler2D colortex15; // flat normals(rgb), vanillaAO(alpha)
 
 #ifdef IS_LPV_ENABLED
@@ -814,7 +814,7 @@ void main() {
 		bool isDHrange = z >= 1.0;
 
 		#ifdef DISTANT_HORIZONS
-			float DH_mixedLinearZ = sqrt(texture2D(colortex12,texcoord).a/65000.0);
+			// float DH_mixedLinearZ = sqrt(texture2D(colortex12,texcoord).a/65000.0);
 			float DH_depth0 = texture2D(dhDepthTex,texcoord).x;
 			float DH_depth1 = texture2D(dhDepthTex1,texcoord).x;
 
@@ -983,11 +983,11 @@ void main() {
 	vec3 filteredShadow = vec3(1.412,1.0,0.0);
 	vec2 SSAO_SSS = vec2(1.0);
 	
-	#ifdef DISTANT_HORIZONS
-		BilateralUpscale_REUSE_Z(colortex3,	colortex14, colortex12, gl_FragCoord.xy, DH_mixedLinearZ, SSAO_SSS, filteredShadow, hand);
-	#else
-		BilateralUpscale_REUSE_Z(colortex3,	colortex14, depthtex0, gl_FragCoord.xy, ld(z0), SSAO_SSS, filteredShadow, hand);
-	#endif
+	// #ifdef DISTANT_HORIZONS
+	// 	BilateralUpscale_REUSE_Z(colortex3,	colortex14, colortex12, gl_FragCoord.xy, DH_mixedLinearZ, SSAO_SSS, filteredShadow, hand);
+	// #else
+	// 	BilateralUpscale_REUSE_Z(colortex3,	colortex14, depthtex0, gl_FragCoord.xy, ld(z0), SSAO_SSS, filteredShadow, hand);
+	// #endif
 
 	// SSAO_SSS = texture2D(colortex14,texcoord).xy;
 	// filteredShadow = texture2D(colortex3,texcoord).xyz;
@@ -1361,13 +1361,13 @@ void main() {
 	
 
 	if(translucentMasks > 0.0){
-		#ifdef DISTANT_HORIZONS
-    	  vec4 vlBehingTranslucents = BilateralUpscale_DH(colortex13, colortex12, gl_FragCoord.xy, sqrt(texture2D(colortex12,texcoord).a/65000.0));
-    	#else
-    	  vec4 vlBehingTranslucents = BilateralUpscale(colortex13, depthtex1, gl_FragCoord.xy, ld(z));
-    	#endif
+		// #ifdef DISTANT_HORIZONS
+    	//   vec4 vlBehingTranslucents = BilateralUpscale_DH(colortex13, colortex12, gl_FragCoord.xy, sqrt(texture2D(colortex12,texcoord).a/65000.0));
+    	// #else
+    	//   vec4 vlBehingTranslucents = BilateralUpscale(colortex13, depthtex1, gl_FragCoord.xy, ld(z));
+    	// #endif
 
-    	gl_FragData[0].rgb = gl_FragData[0].rgb * vlBehingTranslucents.a + vlBehingTranslucents.rgb;
+    	// gl_FragData[0].rgb = gl_FragData[0].rgb * vlBehingTranslucents.a + vlBehingTranslucents.rgb;
 	}
 
 	// gl_FragData[0].rgb = vec3(1.0) * clamp(1.0 - filteredShadow.y/1,0,1);
